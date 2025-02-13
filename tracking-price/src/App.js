@@ -1,98 +1,186 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [newProduct, setNewProduct] = useState({ name: "", url: "" });
+  const [url, setUrl] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
 
-  // Cargar productos al inicio
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/products")
-      .then((response) => setProducts(response.data.products))
-      .catch((error) => console.error("Error al cargar productos", error));
+    fetchProducts();
   }, []);
 
-  // Función para obtener el precio y la fuente (Amazon/MediaMarkt)
-  const fetchPrice = async (url) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/precio?url=${url}`);
-      const price = response.data.price || "No disponible";
-      const source = url.includes("mediamarkt") ? "MediaMarkt" : url.includes("amazon") ? "Amazon" : "Desconocido";
-      return { price, source };
-    } catch (error) {
-      console.error("Error al obtener precio", error);
-      return { price: "Error al obtener precio", source: "Desconocido" };
-    }
-  };
-
-  // Añadir un nuevo producto
-  const handleAddProduct = async () => {
+  const fetchProducts = async () => {
     setLoading(true);
     try {
-      const { price, source } = await fetchPrice(newProduct.url);
-      const newProductWithPrice = { ...newProduct, price, source };
-      setProducts((prevProducts) => [...prevProducts, newProductWithPrice]);
-      setNewProduct({ name: "", url: "" }); // Limpiar formulario
+      const response = await fetch("http://localhost:3000/products");
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error("Se esperaba un arreglo");
+      }
     } catch (error) {
-      console.error("Error al añadir producto", error);
+      console.error("Error al obtener productos:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  // Limpiar productos
-  const handleClearProducts = async () => {
+  const handleAddProduct = async () => {
+    if (!name.trim()) return alert("Ingresa un nombre válido");
+    if (!url.trim() || !isValidUrl(url)) return alert("Ingresa una URL válida");
+
+    setLoading(true);
     try {
-      await axios.delete("http://localhost:3000/clear-products");
-      setProducts([]);
+      const response = await fetch(`http://localhost:3000/precio?url=${encodeURIComponent(url)}`);
+      const data = await response.json();
+
+      if (data.error) {
+        alert("No se pudo obtener el precio");
+        return;
+      }
+
+      const newProduct = {
+        name: name.trim(),
+        url: url.trim(),
+        price: data.price,
+        source: data.source,
+        imageUrl: data.imageUrl,
+      };
+
+      const postResponse = await fetch("http://localhost:3000/add-product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
+
+      const postData = await postResponse.json();
+      if (!postResponse.ok) {
+        alert(postData.error);
+        return;
+      }
+
+      setProducts([...products, postData.product]);
     } catch (error) {
-      console.error("Error al limpiar productos", error);
+      console.error("Error al añadir producto:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleDeleteProduct = async (id) => {
+    if (window.confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+      try {
+        await fetch(`http://localhost:3000/delete-product/${id}`, {
+          method: "DELETE",
+        });
+
+        setProducts(products.filter((product) => product.id !== id));
+      } catch (error) {
+        console.error("Error al eliminar producto:", error);
+      }
+    }
+  };
+
+  const isValidUrl = (url) => {
+    const regex = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-./?%&=]*)?$/;
+    return regex.test(url);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Gestión de Productos</h1>
-        <div className="form-container">
-          <input
-            type="text"
-            placeholder="Nombre del producto"
-            value={newProduct.name}
-            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-            className="input-field"
-          />
-          <input
-            type="text"
-            placeholder="URL del producto"
-            value={newProduct.url}
-            onChange={(e) => setNewProduct({ ...newProduct, url: e.target.value })}
-            className="input-field"
-          />
-          <button onClick={handleAddProduct} disabled={loading} className="add-btn">
-            {loading ? "Cargando..." : "Añadir Producto"}
-          </button>
-        </div>
+      <h1>Scraper de Precios</h1>
 
-        <h2>Lista de Productos</h2>
-        <div className="product-list">
-          {products.map((product, index) => (
-            <div key={index} className="product-card">
-              <h3>{product.name}</h3>
-              <p><strong>Precio:</strong> {product.price}</p>
-              <p><strong>Fuente:</strong> {product.source}</p>
-              <a href={product.url} target="_blank" rel="noopener noreferrer" className="product-link">
-                Ver Producto
-              </a>
-            </div>
-          ))}
-        </div>
-        <button onClick={handleClearProducts} className="clear-btn">
-          Limpiar Productos
+      {loading && <div className="loading-indicator">Cargando...</div>}
+
+      <div className="form-container">
+        <input
+          className="input-field"
+          type="text"
+          placeholder="Nombre del producto"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          className="input-field"
+          type="text"
+          placeholder="URL del producto"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <button className="add-btn" onClick={handleAddProduct}>
+          Añadir Producto
         </button>
-      </header>
+      </div>
+
+      <input
+        type="text"
+        className="search-bar"
+        placeholder="Buscar producto..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <div className="product-list">
+        {currentProducts.map((product) => (
+          <div key={product.id} className="product-card">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="product-image"
+            />
+            <h3 className="card-header">
+              {product.name}
+              <p className="price">{product.price}</p>
+            </h3>
+            <p>{product.source}</p>
+            <p className="timestamp">Añadido el: {new Date(product.createdAt).toLocaleString()}</p> {/* Mostrar timestamp */}
+            <a
+              href={product.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="product-link"
+            >
+              Ver Producto
+            </a>
+            <button
+              className="delete-btn"
+              onClick={() => handleDeleteProduct(product.id)}
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="pagination">
+        {[...Array(Math.ceil(filteredProducts.length / productsPerPage))].map(
+          (_, index) => (
+            <button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={currentPage === index + 1 ? "active" : ""}
+            >
+              {index + 1}
+            </button>
+          )
+        )}
+      </div>
     </div>
   );
 }

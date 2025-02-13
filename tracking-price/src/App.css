@@ -1,43 +1,131 @@
+/* Estilos generales */
 .App {
   text-align: center;
   font-family: 'Roboto', sans-serif;
-  background-color: #f4f4f9;
-}
-
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: black;
+  background-color: #f7f9fc;
   padding: 20px;
 }
 
-h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
 }
 
-h2 {
-  font-size: 2rem;
-  margin-top: 2rem;
-}
-
-.form-container {
-  margin-bottom: 2rem;
+/* Card del producto */
+.product-card {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 450px;
+  position: relative;
+  overflow: hidden; /* Para evitar que la imagen sobresalga */
+}
+
+/* Hover efecto del card */
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Imagen del producto */
+.product-image {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Cabecera de información del card */
+.card-header {
+  margin-bottom: 15px;
+}
+
+.card-header h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.card-header .price {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c6e49;
+  margin: 0;
+}
+
+/* Descripción adicional */
+.product-card p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Enlace para ver el producto */
+.product-link {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+  font-size: 1.1rem;
+  display: block;
+}
+
+.product-link:hover {
+  color: #388E3C;
+}
+
+/* Botón de eliminar */
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+}
+
+/* Estilo de botones y formularios */
+.input-field, .add-btn, .clear-btn {
+  width: 100%;
 }
 
 .input-field {
   padding: 10px;
   font-size: 1.1rem;
   margin: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
   transition: border-color 0.3s ease;
 }
 
@@ -48,12 +136,12 @@ h2 {
 .add-btn {
   background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1.1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .add-btn:disabled {
@@ -61,62 +149,59 @@ h2 {
   cursor: not-allowed;
 }
 
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+.add-btn:hover:not(:disabled) {
+  background-color: #45a049;
 }
 
-.product-card {
-  background-color: white;
-  color: #333;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 250px;
-  padding: 1rem;
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.product-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.product-card p {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.product-link {
-  color: #4CAF50;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.product-link:hover {
-  color: #388E3C;
-}
-
+/* Botón de limpiar */
 .clear-btn {
   background-color: #f44336;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1.1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 30px;
+  transition: background-color 0.3s ease;
 }
 
 .clear-btn:hover {
   background-color: #e53935;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+  padding: 10px;
+  margin: 20px 0;
+  width: 80%;
+  max-width: 400px;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Paginación */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination button {
+  padding: 10px 15px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.loading-indicator {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
 }
