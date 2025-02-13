@@ -8,6 +8,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal de la imagen
+  const [selectedImage, setSelectedImage] = useState(""); // Estado para la imagen seleccionada
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Estado para el modal de eliminación
+  const [productToDelete, setProductToDelete] = useState(null); // Producto a eliminar
   const productsPerPage = 5;
 
   useEffect(() => {
@@ -37,7 +41,9 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/precio?url=${encodeURIComponent(url)}`);
+      const response = await fetch(
+        `http://localhost:3000/precio?url=${encodeURIComponent(url)}`
+      );
       const data = await response.json();
 
       if (data.error) {
@@ -51,6 +57,7 @@ function App() {
         price: data.price,
         source: data.source,
         imageUrl: data.imageUrl,
+        createdAt: new Date().toISOString(), // Asignar fecha de creación
       };
 
       const postResponse = await fetch("http://localhost:3000/add-product", {
@@ -73,17 +80,18 @@ function App() {
     }
   };
 
-  const handleDeleteProduct = async (id) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-      try {
-        await fetch(`http://localhost:3000/delete-product/${id}`, {
-          method: "DELETE",
-        });
+  const handleDeleteProduct = async () => {
+    if (!productToDelete) return;
 
-        setProducts(products.filter((product) => product.id !== id));
-      } catch (error) {
-        console.error("Error al eliminar producto:", error);
-      }
+    try {
+      await fetch(`http://localhost:3000/delete-product/${productToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      setProducts(products.filter((product) => product.id !== productToDelete.id));
+      setShowDeleteModal(false); // Cerrar modal después de eliminar
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
     }
   };
 
@@ -92,15 +100,46 @@ function App() {
     return regex.test(url);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    return (
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.price.toString().includes(searchTerm) || // Búsqueda por precio
+      product.source.toLowerCase().includes(searchTerm.toLowerCase()) // Búsqueda por fuente
+    );
+  });
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Función para manejar el clic en la imagen y abrir el modal
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setShowModal(true);
+  };
+
+  // Función para cerrar el modal
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedImage("");
+  };
+
+  // Función para abrir el modal de confirmación de eliminación
+  const openDeleteModal = (product) => {
+    setProductToDelete(product); // Guardar el producto a eliminar
+    setShowDeleteModal(true); // Abrir el modal
+  };
+
+  // Función para cerrar el modal de confirmación
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false); // Cerrar el modal
+    setProductToDelete(null); // Limpiar el producto a eliminar
+  };
 
   return (
     <div className="App">
@@ -143,13 +182,16 @@ function App() {
               src={product.imageUrl}
               alt={product.name}
               className="product-image"
+              onClick={() => handleImageClick(product.imageUrl)} // Al hacer clic en la imagen se abre el modal
             />
             <h3 className="card-header">
               {product.name}
               <p className="price">{product.price}</p>
             </h3>
             <p>{product.source}</p>
-            <p className="timestamp">Añadido el: {new Date(product.createdAt).toLocaleString()}</p> {/* Mostrar timestamp */}
+            <p className="timestamp">
+              Añadido el: {new Date(product.createdAt).toLocaleString()}
+            </p>
             <a
               href={product.url}
               target="_blank"
@@ -160,7 +202,7 @@ function App() {
             </a>
             <button
               className="delete-btn"
-              onClick={() => handleDeleteProduct(product.id)}
+              onClick={() => openDeleteModal(product)} // Abrir el modal de confirmación de eliminación
             >
               Eliminar
             </button>
@@ -181,6 +223,39 @@ function App() {
           )
         )}
       </div>
+
+      {/* Modal para mostrar la imagen ampliada */}
+      {showModal && (
+        <div
+          className="modal show"
+          onClick={closeModal} // Asegura que el clic fuera del contenido cierre el modal
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={selectedImage}
+              alt="Imagen ampliada"
+              className="modal-image"
+            />
+            <span className="close-btn" onClick={closeModal}>
+              ×
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteModal && (
+        <div
+          className="modal show"
+          onClick={closeDeleteModal} // Cerrar modal si el usuario hace clic fuera
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <p>¿Estás seguro de que quieres eliminar este producto?</p>
+            <button onClick={handleDeleteProduct}>Sí</button>
+            <button onClick={closeDeleteModal}>Cancelar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
