@@ -242,12 +242,18 @@ async function handleLogin() {
     if (data.error) {
         alert("Credenciales incorrectas.");
     } else {
+        // Guardar el token y el nombre de usuario en el localStorage
         localStorage.setItem('authToken', data.token); // Guardar token
         localStorage.setItem('isAuthenticated', 'true'); // Marcar autenticación
+        localStorage.setItem('username', data.username); // Guardar el nombre del usuario
+
+        // Mostrar el nombre de usuario al lado de "Cerrar sesión"
+        document.getElementById("username-display").style.display = "inline";
+        document.getElementById("username-display").innerText = `Hola, ${data.username}`;
+
         showApp(); // Mostrar la app correctamente
     }
 }
-
 
 async function handleRegister() {
     const name = document.getElementById('register-name').value;
@@ -341,11 +347,22 @@ function handleFilter() {
 }
 
 function handleLogout() {
+    // Eliminar el token y el nombre del usuario del localStorage
     localStorage.removeItem('authToken');
     localStorage.removeItem('isAuthenticated');
-    isAuthenticated = false;
-    document.getElementById('auth-section').style.display = 'block';
-    document.getElementById('app-section').style.display = 'none';
+    localStorage.removeItem('username');
+
+    // Ocultar el nombre del usuario
+    document.getElementById("username-display").style.display = "none";
+
+    // Volver a mostrar la sección de login
+    showLogin();
+}
+
+// Función para mostrar la vista de login nuevamente
+function showLogin() {
+    document.getElementById("auth-section").style.display = "block";
+    document.getElementById("app-section").style.display = "none";
 }
 
 function checkAuthStatus() {
@@ -411,3 +428,14 @@ function showAllProducts() {
     renderProducts(products);
     renderPagination(products);
 }
+
+window.onload = function() {
+    const token = localStorage.getItem("authToken");
+    const username = localStorage.getItem("username");
+    if (token && username) {
+        // Si el token y el nombre del usuario están presentes, mostramos el nombre
+        document.getElementById("username-display").style.display = "inline";
+        document.getElementById("username-display").innerText = `Hola, ${username}`;
+        showApp();
+    }
+};

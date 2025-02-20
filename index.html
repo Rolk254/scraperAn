@@ -18,9 +18,10 @@
         <h1>Scraper de Precios</h1>
       </div>
       <nav>
-        <button onclick="handleLogout()">Cerrar Sesión</button>
+        <span id="username-display" style="display:none;"></span> <!-- Aquí se mostrará el nombre del usuario -->
+        <button id="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
       </nav>
-    </header>
+    </header>    
 
     <div class="loading-indicator" id="loading-indicator" style="display:none;">Cargando...</div>
     <div id="progress-bar-container" style="width: 100%; height: 10px; background-color: #f3f3f3; display: none;">
