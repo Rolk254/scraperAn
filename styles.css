@@ -96,6 +96,15 @@ button:hover {
   background-color: #1565C0;
 }
 
+.botones{
+  width: 10%;
+  padding: 5px;
+  background-color: #1E88E5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 /* App Section */
 .app-section {
   display: flex;
@@ -178,6 +187,7 @@ button:hover {
 .filters {
   margin-top: 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
@@ -220,31 +230,29 @@ button:hover {
 
 /* Modal */
 .modal {
-  position: fixed; /* Posicionamiento fijo para que el modal se quede en su lugar cuando se haga scroll */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Ocupa todo el ancho de la ventana */
-  height: 100vh; /* Ocupa toda la altura de la ventana */
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-  display: flex; /* Flexbox para centrar el contenido */
-  justify-content: center; /* Centrado horizontal */
-  align-items: center; /* Centrado vertical */
-  z-index: 1000; /* Asegurarse de que el modal esté por encima de otros elementos */
-  overflow: auto; /* Para hacer scroll si el contenido es grande */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
 }
 
-/* Estilo para el contenido del modal */
 .modal-content {
-  background-color: white; /* Fondo blanco para el contenido del modal */
+  background-color: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px; /* Ancho máximo para el contenido */
-  width: 100%; /* El contenido ocupa todo el ancho disponible, hasta el máximo */
+  max-width: 500px;
+  width: 100%;
   text-align: center;
-  box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+  box-sizing: border-box;
 }
 
-/* Estilo para los botones dentro del modal */
 .modal-content button {
   padding: 10px 20px;
   margin: 10px;
@@ -252,15 +260,14 @@ button:hover {
   cursor: pointer;
   border-radius: 5px;
   border: none;
-  background-color: #007bff; /* Fondo azul para los botones */
+  background-color: #007bff;
   color: white;
 }
 
 .modal-content button:hover {
-  background-color: #0056b3; /* Fondo azul oscuro cuando se pasa el ratón */
+  background-color: #0056b3;
 }
 
-/* Estilo para la 'X' de cerrar el modal */
 .close-btn {
   position: absolute;
   top: 10px;
@@ -284,4 +291,124 @@ footer {
 footer p {
   margin: 0;
   font-size: 0.9rem;
+}
+
+/* Button - Favorite */
+.favorite-btn {
+  font-size: 1.8rem;
+  background-color: transparent;
+  border: none;
+  color: #FFEB3B;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.favorite-btn:hover {
+  color: #FFD600;
+}
+
+/* Product Image */
+.product-image {
+  width: 100%;
+  height: 150px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Product Header */
+.card-header {
+  font-size: 1.4rem;
+  margin: 10px 0;
+  color: #E0E0E0;
+}
+
+.card-header .price {
+  font-size: 1.2rem;
+  color: #1E88E5;
+  margin-top: 5px;
+}
+
+/* Product Link */
+.product-link {
+  display: inline-block;
+  color: #1E88E5;
+  font-weight: bold;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.product-link:hover {
+  color: #0D47A1;
+}
+
+/* Delete Button */
+.delete-btn {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background-color: #D32F2F;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.delete-btn:hover {
+  background-color: #B71C1C;
+}
+
+/* Image Modal */
+.image-modal-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
+}
+
+.modal-image-container {
+  max-width: 90%;
+  max-height: 80%;
+}
+
+.modal-image-container img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.close-btn:hover {
+  color: #FFEB3B;
 }

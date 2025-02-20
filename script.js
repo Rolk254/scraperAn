@@ -154,60 +154,6 @@ function handleImageClick(imageUrl) {
         </div>
     `;
     document.body.appendChild(imageModal);
-
-    // Añadir estilo al modal para darle un mejor aspecto
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .image-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        .image-modal-content {
-            position: relative;
-            max-width: 90%;
-            max-height: 90%;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            overflow: hidden;
-        }
-        .modal-image-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            max-height: 80vh;
-        }
-        .expanded-image {
-            max-width: 100%;
-            max-height: 80vh;
-            object-fit: contain;
-            border-radius: 5px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 30px;
-            font-weight: bold;
-            color: black;
-            cursor: pointer;
-            z-index: 100;
-        }
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
 }
 
 function closeImageModal() {
