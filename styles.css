@@ -1,0 +1,287 @@
+/* General Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body */
+body {
+  background-color: #171717;
+  color: #E0E0E0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background-color: #1E88E5;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: white;
+  margin: 0;
+}
+
+header nav button {
+  padding: 10px 15px;
+  background-color: #D32F2F;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+header nav button:hover {
+  background-color: #B71C1C;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Auth Section */
+.auth-section {
+  width: 100%;
+  max-width: 400px;
+  background-color: #2C2C2C;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.auth-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #2C2C2C;
+  color: #E0E0E0;
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
+.input-field:focus {
+  border-color: #1E88E5;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1E88E5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1565C0;
+}
+
+/* App Section */
+.app-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-btn {
+  background-color: #1E88E5;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #1565C0;
+}
+
+/* Product List */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
+
+/* Product Card */
+.product-card {
+  background-color: #2C2C2C;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-image img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.card-header h3 {
+  font-size: 1.3rem;
+  margin: 10px 0;
+}
+
+.card-header .price {
+  font-size: 1.2rem;
+  color: #1E88E5;
+}
+
+.product-link {
+  color: #1E88E5;
+  font-weight: bold;
+}
+
+.product-link:hover {
+  color: #0D47A1;
+}
+
+/* Filters */
+.filters {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.filter-select {
+  padding: 8px;
+  background-color: #2C2C2C;
+  color: #E0E0E0;
+  border: 1px solid #BBB;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-bar {
+  padding: 10px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 400px;
+  background-color: #2C2C2C;
+  border-radius: 5px;
+}
+
+.price-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 10px;
+  margin: 5px;
+  background-color: #2C2C2C;
+  color: #E0E0E0;
+  border: 1px solid #BBB;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #1E88E5;
+  color: white;
+}
+
+/* Modal */
+.modal {
+  position: fixed; /* Posicionamiento fijo para que el modal se quede en su lugar cuando se haga scroll */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Ocupa todo el ancho de la ventana */
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex; /* Flexbox para centrar el contenido */
+  justify-content: center; /* Centrado horizontal */
+  align-items: center; /* Centrado vertical */
+  z-index: 1000; /* Asegurarse de que el modal esté por encima de otros elementos */
+  overflow: auto; /* Para hacer scroll si el contenido es grande */
+}
+
+/* Estilo para el contenido del modal */
+.modal-content {
+  background-color: white; /* Fondo blanco para el contenido del modal */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px; /* Ancho máximo para el contenido */
+  width: 100%; /* El contenido ocupa todo el ancho disponible, hasta el máximo */
+  text-align: center;
+  box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+}
+
+/* Estilo para los botones dentro del modal */
+.modal-content button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff; /* Fondo azul para los botones */
+  color: white;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3; /* Fondo azul oscuro cuando se pasa el ratón */
+}
+
+/* Estilo para la 'X' de cerrar el modal */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+footer {
+  background-color: #1E88E5;
+  padding: 15px;
+  text-align: center;
+  color: white;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}

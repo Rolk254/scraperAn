@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scraper de Precios</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="lines">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
+  <div class="App">
+    <header>
+      <div class="logo">
+        <h1>Scraper de Precios</h1>
+      </div>
+      <nav>
+        <button onclick="handleLogout()">Cerrar Sesión</button>
+      </nav>
+    </header>
+
+    <div class="loading-indicator" id="loading-indicator" style="display:none;">Cargando...</div>
+    <div id="progress-bar-container" style="width: 100%; height: 10px; background-color: #f3f3f3; display: none;">
+      <div id="progress-bar" style="width: 0%; height: 100%; background-color: #4caf50;"></div>
+    </div>
+
+    <section id="auth-section" class="auth-section">
+      <div id="login-form">
+        <h2>Iniciar Sesión</h2>
+        <input id="login-email" type="email" placeholder="Correo Electrónico" class="input-field">
+        <input id="login-password" type="password" placeholder="Contraseña" class="input-field">
+        <button onclick="handleLogin()">Iniciar Sesión</button>
+        <p>No tienes cuenta? <a href="#" onclick="toggleAuthForm('register')">Registrarse</a></p>
+      </div>
+
+      <div id="register-form" class="form-section" style="display:none;">
+        <h2>Registrarse</h2>
+        <input id="register-name" type="text" placeholder="Nombre" class="input-field">
+        <input id="register-email" type="email" placeholder="Correo Electrónico" class="input-field">
+        <input id="register-password" type="password" placeholder="Contraseña" class="input-field">
+        <button onclick="handleRegister()">Registrarse</button>
+        <p>¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForm('login')">Iniciar sesión</a></p>
+      </div>
+    </section>
+
+    <div id="app-section" style="display:none;">
+      <!-- Aquí va el contenido de la app que se muestra solo después de loguearse -->
+
+      <div class="form-container">
+        <input id="product-name" class="input-field" type="text" placeholder="Nombre del producto">
+        <input id="product-url" class="input-field" type="text" placeholder="URL del producto">
+        <button class="add-btn" onclick="handleAddProduct()">Añadir Producto</button>
+      </div>
+
+      <div class="filters">
+        <select id="filter-source" class="filter-select" onchange="handleFilter()">
+          <option value="all">Todos</option>
+          <option value="Amazon">Amazon</option>
+          <option value="MediaMarkt">MediaMarkt</option>
+        </select>
+        <button onclick="showFavorites()">Ver Favoritos</button>
+        <button onclick="showAllProducts()">Ver Todos</button>
+
+        <input type="text" id="search-input" class="search-bar" placeholder="Buscar productos..." oninput="handleSearch()">
+
+        <div class="price-filters">
+          <label for="min-price">Precio mínimo:</label>
+          <input type="number" id="min-price" placeholder="Min" oninput="handleSearch()">
+        </div>
+        <div class="price-filters">
+          <label for="max-price">Precio máximo:</label>
+          <input type="number" id="max-price" placeholder="Max" oninput="handleSearch()">
+        </div>
+      </div>
+
+      <div id="product-list" class="product-list"></div>
+      <div id="pagination" class="pagination"></div>
+
+      <!-- Modal de imagen -->
+      <div id="image-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <img id="modal-image" src="" alt="Imagen ampliada" class="modal-image">
+          <span class="close-btn" onclick="closeModal()">×</span>
+        </div>
+      </div>
+
+      <!-- Modal de eliminación -->
+      <!-- Modal Delete -->
+      <div id="delete-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <p>¿Estás seguro de que quieres eliminar este producto?</p>
+          <button id="confirm-delete-btn" onclick="confirmDelete()">Sí</button>
+          <button onclick="closeDeleteModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>&copy; 2025 Scraper de Precios. Todos los derechos reservados.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
