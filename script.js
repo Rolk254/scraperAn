@@ -1,5 +1,5 @@
 let isAuthenticated = false;
-const serverIp = "http://192.168.2.76:3000";
+const serverIp = "http://localhost:3000";
 let currentPage = 1;
 const productsPerPage = 5;
 
@@ -103,7 +103,7 @@ function renderProducts(filteredProducts = products) {
             <div class="product-image">
                 <img src="${product.imageUrl}" alt="${product.name}" onclick="handleImageClick('${product.imageUrl}')">
             </div>
-            <h3 class="card-header">${product.name}<p class="price">${product.price}</p></h3>
+            <h3 class="card-header">${product.name}<p class="price">${product.price} €</p></h3>
             <p>${product.source}</p>
             <p>Añadido el: ${new Date(product.createdAt).toLocaleString()}</p>
             <a href="${product.url}" target="_blank" class="product-link">Ver Producto</a>

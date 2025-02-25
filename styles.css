@@ -71,7 +71,6 @@ header nav button:hover {
 .input-field {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
   background-color: #2C2C2C;
   color: #E0E0E0;
   border: 1px solid #555;
@@ -144,12 +143,11 @@ button:hover {
 /* Product Card */
 .product-card {
   background-color: #2C2C2C;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   transition: transform 0.3s ease;
 }
 
@@ -157,26 +155,31 @@ button:hover {
   transform: translateY(-5px);
 }
 
+.product-image {
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
 .product-image img {
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 }
 
 .card-header h3 {
-  font-size: 1.3rem;
-  margin: 10px 0;
+  font-size: 1.2rem;
 }
 
 .card-header .price {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #1E88E5;
 }
 
 .product-link {
-  color: #1E88E5;
-  font-weight: bold;
+  font-size: 0.9rem;
+  margin-top: auto;
 }
 
 .product-link:hover {
@@ -255,7 +258,6 @@ button:hover {
 
 .modal-content button {
   padding: 10px 20px;
-  margin: 10px;
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
@@ -311,7 +313,6 @@ footer p {
 .product-image {
   width: 100%;
   height: 150px;
-  margin-top: 10px;
   overflow: hidden;
   border-radius: 10px;
   position: relative;
@@ -332,14 +333,12 @@ footer p {
 /* Product Header */
 .card-header {
   font-size: 1.4rem;
-  margin: 10px 0;
   color: #E0E0E0;
 }
 
 .card-header .price {
   font-size: 1.2rem;
   color: #1E88E5;
-  margin-top: 5px;
 }
 
 /* Product Link */
@@ -347,7 +346,6 @@ footer p {
   display: inline-block;
   color: #1E88E5;
   font-weight: bold;
-  margin-top: 10px;
   text-decoration: none;
 }
 
@@ -357,14 +355,8 @@ footer p {
 
 /* Delete Button */
 .delete-btn {
-  padding: 10px 20px;
-  margin-top: 10px;
-  background-color: #D32F2F;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
+  padding: 8px 15px;
+  font-size: 0.9rem;
 }
 
 .delete-btn:hover {
