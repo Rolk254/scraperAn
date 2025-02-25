@@ -37,7 +37,9 @@ async function fetchProducts() {
             // Actualizar el progreso
             loaded += value.length;
             const progress = (loaded / totalSize) * 100;
-            progressBar.style.width = `${progress.toFixed(2)}%`; // Establecer el porcentaje
+            requestAnimationFrame(() => {
+                progressBar.style.width = `${progress.toFixed(2)}%`;
+            });
 
         }
 
@@ -162,6 +164,11 @@ function closeImageModal() {
         imageModal.remove();
     }
 }
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" || event.key === "Esc") {
+        closeImageModal();
+    }
+});
 
 let currentProductId = null; // Variable global para almacenar el id del producto que se va a eliminar
 

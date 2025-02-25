@@ -136,7 +136,6 @@ button:hover {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   width: 100%;
-  max-width: 1200px;
   margin-top: 20px;
 }
 
@@ -403,4 +402,11 @@ footer p {
 
 .close-btn:hover {
   color: #FFEB3B;
+}
+
+#progress-bar {
+  width: 0%;
+  height: 5px;
+  background-color: #4CAF50;
+  transition: width 0.2s ease-in-out; /* Agregar una transición */
 }
