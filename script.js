@@ -208,7 +208,6 @@ async function handleDelete(productId) {
     });
 
     if (response.ok) {
-        alert("Producto eliminado exitosamente.");
         fetchProducts(); // Volver a cargar los productos después de eliminar
     } else {
         const errorData = await response.json();

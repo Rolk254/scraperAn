@@ -233,18 +233,18 @@ button:hover {
 /* Modal */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Esto lo mueve hacia el centro */
+  width: 80%; /* o el tamaño que desees */
+  max-width: 600px; /* Máximo tamaño del modal */
+  height: auto; /* Si es necesario, ajusta la altura */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   overflow: auto;
 }
-
 .modal-content {
   background-color: white;
   padding: 20px;
