@@ -58,6 +58,8 @@ header nav button:hover {
   max-width: 400px;
   background-color: #2C2C2C;
   padding: 30px;
+  margin-left: auto;
+  margin-right: auto;
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
@@ -409,4 +411,25 @@ footer p {
   height: 5px;
   background-color: #4CAF50;
   transition: width 0.2s ease-in-out; /* Agregar una transición */
+}
+
+.popup-notificacion {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  background-color: #4caf50; /* Color de fondo verde */
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px; /* Bordes más suaves */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+  opacity: 0;
+  transform: translateX(120%); /* Se mueve desde más lejos */
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transición más suave */
+  z-index: 1000;
+}
+
+.popup-notificacion.mostrar {
+  opacity: 1;
+  transform: translateX(0);
 }

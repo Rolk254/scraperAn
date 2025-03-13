@@ -3,12 +3,12 @@ const serverIp = "http://localhost:3000";
 let currentPage = 1;
 const productsPerPage = 5;
 
-let products = []; // Asegúrate de que 'products' esté inicializado correctamente
+let products = [];
 
 async function fetchProducts() {
-    document.getElementById('progress-bar-container').style.display = 'block'; // Mostrar la barra de progreso
+    document.getElementById('progress-bar-container').style.display = 'block';
     const progressBar = document.getElementById('progress-bar');
-    progressBar.style.width = '0%';  // Comienza en 0%
+    progressBar.style.width = '0%';
 
     try {
         const response = await fetch(`${serverIp}/products`);
@@ -17,7 +17,6 @@ async function fetchProducts() {
             throw new Error("Error al obtener productos");
         }
 
-        // Tamaño total de la respuesta
         const totalSize = response.headers.get('Content-Length');
         let loaded = 0;
 
@@ -25,16 +24,13 @@ async function fetchProducts() {
         const decoder = new TextDecoder();
         let result = '';
         
-        // Crear un ciclo para leer la respuesta en fragmentos
         while (true) {
             const { done, value } = await reader.read();
 
             if (done) break;
 
-            // Decodificar los datos y concatenarlos
             result += decoder.decode(value, { stream: true });
 
-            // Actualizar el progreso
             loaded += value.length;
             const progress = (loaded / totalSize) * 100;
             requestAnimationFrame(() => {
@@ -43,7 +39,6 @@ async function fetchProducts() {
 
         }
 
-        // Finalmente, procesar los datos una vez que se haya leído todo el cuerpo
         const data = JSON.parse(result);
 
         if (Array.isArray(data)) {
@@ -53,30 +48,27 @@ async function fetchProducts() {
             products = [];
         }
     } catch (error) {
-        console.error("Error al obtener productos:", error);
+        console.error("Error al obtener productos");
         products = [];
     } finally {
-        renderProducts();  // Llama a renderProducts siempre, incluso si hay un error
-        renderPagination(); // Llama a renderPagination siempre, incluso si hay un error
+        renderProducts();
+        renderPagination();
         document.getElementById('loading-indicator').style.display = 'none';
-        document.getElementById('progress-bar-container').style.display = 'none'; // Ocultar la barra de progreso al final
+        document.getElementById('progress-bar-container').style.display = 'none';
     }
 }
 
-// Manejador de búsqueda avanzada
 function handleSearch() {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
     const minPrice = parseFloat(document.getElementById('min-price').value) || 0;
     const maxPrice = parseFloat(document.getElementById('max-price').value) || Infinity;
 
-    // Filtra los productos por nombre y precio
     const filteredProducts = products.filter(product => {
         const matchesName = product.name.toLowerCase().includes(searchTerm);
         const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
         return matchesName && matchesPrice;
     });
 
-    // Re-renderiza los productos con los resultados de la búsqueda
     renderProducts(filteredProducts);
     renderPagination(filteredProducts);
 }
@@ -115,19 +107,16 @@ function renderProducts(filteredProducts = products) {
     });
 }
 
-// Renderizar paginación
 function renderPagination(filteredProducts = products) {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
     const selectedSource = document.getElementById("filter-source").value;
 
-    // Filtrar productos por fuente si es necesario
     if (selectedSource !== "all") {
         filteredProducts = filteredProducts.filter(product => product.source === selectedSource);
     }
 
-    // Calcular las páginas necesarias
     const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
     for (let i = 1; i <= totalPages; i++) {
         const button = document.createElement('button');
@@ -138,10 +127,9 @@ function renderPagination(filteredProducts = products) {
     }
 }
 
-// Cambiar de página
 function changePage(pageNumber) {
     currentPage = pageNumber;
-    handleSearch(); // Llamar a handleSearch para aplicar los filtros cuando se cambie de página
+    handleSearch();
 }
 
 function handleImageClick(imageUrl) {
@@ -170,48 +158,44 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
-let currentProductId = null; // Variable global para almacenar el id del producto que se va a eliminar
+let currentProductId = null;
 
-// Función para abrir el modal y pasar el ID del producto
 function openDeleteModal(productId) {
-    currentProductId = productId; // Guardar el ID del producto a eliminar
-    document.getElementById('delete-modal').style.display = 'block'; // Mostrar el modal
+    currentProductId = productId;
+    document.getElementById('delete-modal').style.display = 'block';
 }
 
-// Función para cerrar el modal
 function closeDeleteModal() {
-    document.getElementById('delete-modal').style.display = 'none'; // Ocultar el modal
-    currentProductId = null; // Limpiar el ID del producto
+    document.getElementById('delete-modal').style.display = 'none';
+    currentProductId = null;
 }
 
-// Función para confirmar la eliminación
 async function confirmDelete() {
     if (currentProductId !== null) {
-        await handleDelete(currentProductId); // Llamar a handleDelete con el ID del producto
+        await handleDelete(currentProductId);
     }
-    closeDeleteModal(); // Cerrar el modal después de eliminar
+    closeDeleteModal();
 }
 
-// Función para eliminar el producto
 async function handleDelete(productId) {
     const token = localStorage.getItem('authToken');
     if (!token) {
-        alert("Debes iniciar sesión para eliminar productos.");
+        abrirPopup("Debes iniciar sesión para eliminar productos.");
         return;
     }
 
     const response = await fetch(`${serverIp}/delete-product/${productId}`, {
         method: 'DELETE',
         headers: {
-            'Authorization': `Bearer ${token}`, // Enviar el token en el encabezado Authorization
+            'Authorization': `Bearer ${token}`,
         },
     });
 
     if (response.ok) {
-        fetchProducts(); // Volver a cargar los productos después de eliminar
+        fetchProducts();
     } else {
         const errorData = await response.json();
-        alert(errorData.error || "Error al eliminar el producto.");
+        abrirPopup(errorData.error || "Error al eliminar el producto.");
     }
 }
 
@@ -231,7 +215,7 @@ async function handleLogin() {
     const password = document.getElementById('login-password').value;
 
     if (!email.trim() || !password.trim()) {
-        alert("Por favor ingresa ambos campos.");
+        abrirPopup("Por favor ingresa ambos campos.");
         return;
     }
 
@@ -246,18 +230,16 @@ async function handleLogin() {
     const data = await response.json();
 
     if (data.error) {
-        alert("Credenciales incorrectas.");
+        abrirPopup("Credenciales incorrectas.");
     } else {
-        // Guardar el token y el nombre de usuario en el localStorage
-        localStorage.setItem('authToken', data.token); // Guardar token
-        localStorage.setItem('isAuthenticated', 'true'); // Marcar autenticación
-        localStorage.setItem('username', data.username); // Guardar el nombre del usuario
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('username', data.username);
 
-        // Mostrar el nombre de usuario al lado de "Cerrar sesión"
         document.getElementById("username-display").style.display = "inline";
         document.getElementById("username-display").innerText = `Hola, ${data.username}`;
 
-        showApp(); // Mostrar la app correctamente
+        showApp();
     }
 }
 
@@ -267,7 +249,7 @@ async function handleRegister() {
     const password = document.getElementById('register-password').value;
 
     if (!name.trim() || !email.trim() || !password.trim()) {
-        alert("Por favor ingresa todos los campos.");
+        abrirPopup("Por favor ingresa todos los campos.");
         return;
     }
 
@@ -282,9 +264,9 @@ async function handleRegister() {
     const data = await response.json();
 
     if (data.error) {
-        alert("Error al registrarse.");
+        abrirPopup("Error al registrarse.");
     } else {
-        alert("Registrado exitosamente. Ahora puedes iniciar sesión.");
+        abrirPopup("Registrado exitosamente. Ahora puedes iniciar sesión.");
         toggleAuthForm('login');
     }
 }
@@ -292,7 +274,7 @@ async function handleRegister() {
 async function handleAddProduct() {
     const token = localStorage.getItem('authToken');
     if (!token) {
-        alert("Debes iniciar sesión para agregar productos.");
+        abrirPopup("Debes iniciar sesión para agregar productos.");
         return;
     }
 
@@ -300,7 +282,7 @@ async function handleAddProduct() {
     const url = document.getElementById('product-url').value;
 
     if (!name.trim() || !url.trim() || !isValidUrl(url)) {
-        alert("Nombre o URL inválidos.");
+        abrirPopup("Nombre o URL inválidos.");
         return;
     }
 
@@ -308,7 +290,7 @@ async function handleAddProduct() {
     const data = await response.json();
 
     if (data.error) {
-        alert("No se pudo obtener el precio");
+        abrirPopup("No se pudo obtener el precio");
         return;
     }
 
@@ -321,17 +303,16 @@ async function handleAddProduct() {
         createdAt: new Date().toISOString(),
     };
 
-    // Aquí se envía el token en el encabezado Authorization para agregar el producto
     await fetch(`${serverIp}/add-product`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`, // Enviar el token
+            "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(newProduct),
     });
 
-    fetchProducts(); // Volver a cargar los productos después de agregar
+    fetchProducts();
 }
 
 function isValidUrl(url) {
@@ -341,9 +322,8 @@ function isValidUrl(url) {
 
 function handleFilter() {
     const selectedSource = document.getElementById("filter-source").value;
-    currentPage = 1; // Volver a la primera página cuando cambias el filtro
+    currentPage = 1;
 
-    // Filtrar productos según la fuente seleccionada
     const filteredProducts = selectedSource === "all" 
         ? products 
         : products.filter(product => product.source === selectedSource);
@@ -353,19 +333,15 @@ function handleFilter() {
 }
 
 function handleLogout() {
-    // Eliminar el token y el nombre del usuario del localStorage
     localStorage.removeItem('authToken');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('username');
 
-    // Ocultar el nombre del usuario
     document.getElementById("username-display").style.display = "none";
 
-    // Volver a mostrar la sección de login
     showLogin();
 }
 
-// Función para mostrar la vista de login nuevamente
 function showLogin() {
     document.getElementById("auth-section").style.display = "block";
     document.getElementById("app-section").style.display = "none";
@@ -376,7 +352,7 @@ function checkAuthStatus() {
     const authState = localStorage.getItem('isAuthenticated');
 
     if (token && authState === 'true') {
-        showApp(); // Si hay un token válido, mostrar la app
+        showApp();
     }
 }
 
@@ -384,44 +360,35 @@ function showApp() {
     isAuthenticated = true;
     document.getElementById('auth-section').style.display = 'none';
     document.getElementById('app-section').style.display = 'block';
-    fetchProducts(); // Cargar productos tras autenticación
+    fetchProducts();
 }
 
-// Ejecutar al cargar la página
 window.onload = checkAuthStatus;
 
-// Obtener los productos favoritos desde localStorage
 function getFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     return favorites;
 }
 
-// Verificar si un producto es favorito
 function isProductFavorited(productId) {
     const favorites = getFavorites();
     return favorites.includes(productId);
 }
 
-// Alternar el estado de favorito
 function toggleFavorite(productId) {
     let favorites = getFavorites();
 
     if (favorites.includes(productId)) {
-        // Eliminar de favoritos
         favorites = favorites.filter(id => id !== productId);
     } else {
-        // Agregar a favoritos
         favorites.push(productId);
     }
 
-    // Guardar los favoritos actualizados en localStorage
     localStorage.setItem('favorites', JSON.stringify(favorites));
 
-    // Re-renderizar los productos después de agregar o quitar de favoritos
-    renderProducts(products); // Recargar los productos con la lista de favoritos actualizada
+    renderProducts(products);
 }
 
-// Mostrar solo los productos favoritos
 function showFavorites() {
     const favorites = getFavorites();
     const favoriteProducts = products.filter(product => favorites.includes(product.id));
@@ -429,17 +396,32 @@ function showFavorites() {
     renderPagination(favoriteProducts);
 }
 
-// Mostrar todos los productos
 function showAllProducts() {
     renderProducts(products);
     renderPagination(products);
+}
+
+function abrirPopup(mensaje) {
+    const popup = document.createElement('div');
+    popup.className = 'popup-notificacion';
+    popup.innerText = mensaje;
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        popup.classList.add('mostrar');
+    }, 10);
+
+    setTimeout(() => {
+        popup.classList.remove('mostrar');
+        setTimeout(() => popup.remove(), 500);
+    }, 4000);
 }
 
 window.onload = function() {
     const token = localStorage.getItem("authToken");
     const username = localStorage.getItem("username");
     if (token && username) {
-        // Si el token y el nombre del usuario están presentes, mostramos el nombre
         document.getElementById("username-display").style.display = "inline";
         document.getElementById("username-display").innerText = `Hola, ${username}`;
         showApp();
